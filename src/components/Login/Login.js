@@ -27,6 +27,9 @@ useEffect(() => {
 
 }, [enteredEmail, enteredPassword]);
 
+// There might be situations where the below setup of multiple handlers and specifically in email and password changeHandlers where React's state queuing runs the validity function when either
+// of the two state slices it depends on hasn't updated yet. In this scenario, useReducer might be the better option to 'combine' different but app-functionally similar states
+
   const emailChangeHandler = (event) => {
     setEnteredEmail(event.target.value);
 
