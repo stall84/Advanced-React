@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 
 import Card from '../UI/Card/Card';
 import classes from './Login.module.css';
@@ -11,21 +11,30 @@ const Login = (props) => {
   const [passwordIsValid, setPasswordIsValid] = useState();
   const [formIsValid, setFormIsValid] = useState(false);
 
-useEffect(() => {
+  const emailReducer = function (state, action) {
+    return {
+      value: '',
+      isValid: false
+    }
+  }
+
+  const [emailState, dispatchEmail] = useReducer(emailReducer, { value: '', isValid: false })
+
+// useEffect(() => {
   
-  const identifier = setTimeout(() => {
-    console.log('Changing Text');
-    setFormIsValid(
-      enteredEmail.includes('@') && enteredPassword.trim().length > 6
-    );
-  }, 500)
+//   const identifier = setTimeout(() => {
+//     console.log('Changing Text');
+//     setFormIsValid(
+//       enteredEmail.includes('@') && enteredPassword.trim().length > 6
+//     );
+//   }, 500)
 
-  return () => {
-    console.log('Cleanup');
-    clearTimeout(identifier);
-  };
+//   return () => {
+//     console.log('Cleanup');
+//     clearTimeout(identifier);
+//   };
 
-}, [enteredEmail, enteredPassword]);
+// }, [enteredEmail, enteredPassword]);
 
 // There might be situations where the below setup of multiple handlers and specifically in email and password changeHandlers where React's state queuing runs the validity function when either
 // of the two state slices it depends on hasn't updated yet. In this scenario, useReducer might be the better option to 'combine' different but app-functionally similar states
@@ -42,12 +51,12 @@ useEffect(() => {
     setEnteredPassword(event.target.value);
 
     setFormIsValid(
-      event.target.value.trim().length > 6 && enteredEmail.includes('@')
+      event.target.value.trim().length > 6 && emailState.isValid
     );
   };
 
   const validateEmailHandler = () => {
-    setEmailIsValid(enteredEmail.includes('@'));
+    setEmailIsValid(emailState.value.includes('@'));
   };
 
   const validatePasswordHandler = () => {
@@ -56,7 +65,7 @@ useEffect(() => {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    props.onLogin(enteredEmail, enteredPassword);
+    props.onLogin(emailState.value, enteredPassword);
   };
 
   return (
@@ -64,14 +73,14 @@ useEffect(() => {
       <form onSubmit={submitHandler}>
         <div
           className={`${classes.control} ${
-            emailIsValid === false ? classes.invalid : ''
+            emailState.isValid === false ? classes.invalid : ''
           }`}
         >
           <label htmlFor="email">E-Mail</label>
           <input
             type="email"
             id="email"
-            value={enteredEmail}
+            value={emailState.value}
             onChange={emailChangeHandler}
             onBlur={validateEmailHandler}
           />
