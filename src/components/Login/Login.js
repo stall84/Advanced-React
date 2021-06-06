@@ -5,13 +5,25 @@ import classes from './Login.module.css';
 import Button from '../UI/Button/Button';
 
 const Login = (props) => {
-  const [enteredEmail, setEnteredEmail] = useState('');
-  const [emailIsValid, setEmailIsValid] = useState();
+  // const [enteredEmail, setEnteredEmail] = useState('');
+  // const [emailIsValid, setEmailIsValid] = useState();
   const [enteredPassword, setEnteredPassword] = useState('');
   const [passwordIsValid, setPasswordIsValid] = useState();
   const [formIsValid, setFormIsValid] = useState(false);
 
   const emailReducer = function (state, action) {
+    if (action.type === 'USER_INPUT') {
+      return {
+        value: action.payload,
+        isValid: action.payload.includes('@')
+      }
+    }
+    if (action.type === 'INPUT_BLUR') {
+      return {
+        value: state.value,
+        isValid: state.value.includes('@')
+      }
+    }
     return {
       value: '',
       isValid: false
@@ -40,7 +52,10 @@ const Login = (props) => {
 // of the two state slices it depends on hasn't updated yet. In this scenario, useReducer might be the better option to 'combine' different but app-functionally similar states
 
   const emailChangeHandler = (event) => {
-    setEnteredEmail(event.target.value);
+    dispatchEmail({
+      type: 'USER_INPUT',
+      payload: event.target.value
+    });
 
     setFormIsValid(
       event.target.value.includes('@') && enteredPassword.trim().length > 6
@@ -56,7 +71,9 @@ const Login = (props) => {
   };
 
   const validateEmailHandler = () => {
-    setEmailIsValid(emailState.value.includes('@'));
+    dispatchEmail({
+      type: 'INPUT_BLUR'
+    })
   };
 
   const validatePasswordHandler = () => {
