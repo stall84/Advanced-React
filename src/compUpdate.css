@@ -1,0 +1,28 @@
+.cmpUdt {
+    margin: 3rem auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 30rem;
+    padding: 1rem;
+    background: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
+    border-radius: 10px;
+  }
+
+  
+  
+  .cmpUdt h1 {
+    margin: 0;
+    text-align: center;
+  }
+
+  .cmpUdt p {
+    margin: 0, 4;
+    text-align: center;
+  }
+
+  span {
+    font-weight: bolder;
+    font-style: italic;
+  }
